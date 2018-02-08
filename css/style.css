@@ -46,7 +46,7 @@ form{
 
 input{
     margin-bottom: 6px;
-    width: 20%;
+    width: 70px;
 }
 label{
   display: inline-block;
@@ -59,4 +59,13 @@ footer{
 
 .pasirinktas {
     background-color: green;
+}
+
+.count {
+    text-align: center;
+}
+
+.buttons {
+    margin-top: 25px;
+    width: 200px;
 }

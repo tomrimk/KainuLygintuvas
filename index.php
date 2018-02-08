@@ -1,11 +1,15 @@
 <?php
 include_once("planas.php");
 include_once("PlanuList.php");
-$p1 = new planas('Pigiausias', 60, 10000, 1);
-$p2 = new planas('Vidutinis', 190, 10000, 3);
-$p3 = new planas('Brangiausias', 330, 10000, 5);
+$p1 = new planas('TELE2', 60, 10000, 1, 5);
+$p2 = new planas('Telia', 190, 10000, 3, 2);
+$p3 = new planas('Bitė', 330, 10000, 5, 3);
+$p4 = new planas('Bitė', 500, 10000, 10, 1.5);
+$p5 = new planas('TELE2', 200, 10000, 1, 2);
+$p6 = new planas('Pildyk', 250, 5000, 2, 1);
+$p7 = new planas('Telia', 300, 10000, 10, 3);
 
-$planuList = new PlanuList([$p1, $p2, $p3]);
+$planuList = new PlanuList([$p1, $p2, $p3, $p4, $p5, $p6, $p7]);
 
 ?>
 
@@ -43,9 +47,11 @@ $planuList = new PlanuList([$p1, $p2, $p3]);
                                 <input type="number" name="sms" required>
                                 <label>GB:</label>
                                 <input type="number" name="gb" required>
+                                <label>Kaina:</label>
+                                <input type="number" step="any" name="kaina" required>
                                 <div class="button">
-                                    <input type="reset" name="reset">
-                                    <input type="submit" name="submit">
+                                    <input class="buttons" type="reset" name="reset">
+                                    <input class="buttons" type="submit" name="submit">
                                 </div>
                             </form>
                         </div>
@@ -60,14 +66,28 @@ $planuList = new PlanuList([$p1, $p2, $p3]);
                 echo "<br/>";
                 echo "GB: {$_POST['gb']}";
                 echo "<br/>";
+                echo "Kaina: {$_POST['kaina']}";
+                echo "<br/>";
 
                 for($i = 0; $i < count($planuList->getPlanai()); $i++) {
-                    $planuList->getPlanai()[$i]->setRodiklis($planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], $planuList->getPlanai()[$i] ));
+                    $planuList->getPlanai()[$i]->setRodiklis($planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[$i] ));
                 }
 
-                $pirmas = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], $planuList->getPlanai()[0] );
-                $antras = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], $planuList->getPlanai()[1] );
-                $trecias = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], $planuList->getPlanai()[2] );
+                foreach ($planuList->getPlanai() as $value){
+                    printf('kof1: ' . $value->getRodiklis() . "\n");
+                }
+
+                echo "<br/>";
+
+                $sortedPlanai = PlanuList::sortPlanai($planuList);
+
+                foreach ($sortedPlanai->getPlanai() as $value){
+                    printf('Kof2: ' . $value->getRodiklis() . "\n");
+                }
+
+                $pirmas = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'],  $planuList->getPlanai()[0] );
+                $antras = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[1] );
+                $trecias = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[2] );
 
                 $maziausias = $planuList->getPlanai()[0];
 
@@ -83,7 +103,8 @@ $planuList = new PlanuList([$p1, $p2, $p3]);
 
                 $maziausias->setPasirinktas(true);
             }
-            
+
+            $count = 1;
 ?>
             <div class="row">
                 <div class="col-md">
@@ -92,28 +113,36 @@ $planuList = new PlanuList([$p1, $p2, $p3]);
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Plano pavadinimas</th>
+                                    <th>Nr.</th>
+                                    <th>Operatorius</th>
                                     <th>Plano minutės</th>
                                     <th>Plano sms</th>
                                     <th>Plano gb</th>
+                                    <th>Kaina Eur</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($planuList->getPlanai() as $planas) { ?>
                                     <?php if($planas->getPasirinktas()) { ?>
                                         <tr class="pasirinktas">
-                                            <td><?php echo $planas->getName() ?></td>
+                                            <td class="count"><?php echo $count ?></td>
+                                            <td><?php echo $planas->getOperatorius() ?></td>
                                             <td><?php echo $planas->getMin() ?></td>
                                             <td><?php echo $planas->getSms() ?></td>
                                             <td><?php echo $planas->getGb()?></td>
+                                            <td><?php echo $planas->getKaina()?></td>
                                         </tr>
+                                        <?php $count++ ?>
                                     <?php } else { ?>
                                         <tr>
-                                            <td><?php echo $planas->getName() ?></td>
+                                            <td class="count"><?php echo $count ?></td>
+                                            <td><?php echo $planas->getOperatorius() ?></td>
                                             <td><?php echo $planas->getMin() ?></td>
                                             <td><?php echo $planas->getSms() ?></td>
                                             <td><?php echo $planas->getGb() ?></td>
+                                            <td><?php echo $planas->getKaina()?></td>
                                         </tr>
+                                        <?php $count++ ?>
                                     <?php } ?>
                                 <?php } ?>
                             </tbody>

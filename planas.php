@@ -1,36 +1,38 @@
 <?php
 class planas {
 
-    private $name;
+    private $operatorius;
     private $min;
     private $sms;
     private $gb;
     private $pasirinktas;
     private $rodiklis;
+    private $kaina;
     
-    function __construct($name, $min, $sms, $gb)
+    function __construct($operatorius, $min, $sms, $gb, $kaina)
     {
-        $this->name = $name;
+        $this->operatorius = $operatorius;
         $this->min = $min;
         $this->sms = $sms;
         $this->gb = $gb;
         $this->pasirinktas = false;
+        $this->kaina = $kaina;
     }
 
     /**
      * @return mixed
      */
-    public function getName()
+    public function getOperatorius()
     {
-        return $this->name;
+        return $this->operatorius;
     }
 
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($operatorius)
     {
-        $this->name = $name;
+        $this->operatorius = $operatorius;
     }
 
     /**
@@ -112,6 +114,24 @@ class planas {
     {
         $this->rodiklis = $rodiklis;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getKaina()
+    {
+        return $this->kaina;
+    }
+
+    /**
+     * @param mixed $kaina
+     */
+    public function setKaina($kaina)
+    {
+        $this->kaina = $kaina;
+    }
+
+
 
 
 

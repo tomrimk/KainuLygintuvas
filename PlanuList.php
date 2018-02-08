@@ -35,11 +35,21 @@ class PlanuList
         $this->planai = $planai;
     }
 
-    function calculate($pasirinktiPokalbiai, $pasirinktosZinutes, $pasirinktasInternetas, $planas) {
+    function calculate($pasirinktiPokalbiai, $pasirinktosZinutes, $pasirinktasInternetas, $pasirinktaKaina, $planas) {
         $result = sqrt(pow(($planas->getMin() - $pasirinktiPokalbiai), 2)
             + pow(($planas->getSms() - $pasirinktosZinutes),2)
-            + pow(($planas->getGb() - $pasirinktasInternetas),2));
+            + pow(($planas->getGb() - $pasirinktasInternetas),2)
+            + pow(($planas->getKaina() - $pasirinktaKaina), 2));
         return $result;
+    }
+
+    static function sortPlanai($planuList) {
+        if (count($planuList->getPlanai()) == 0) {
+            return $planuList;
+        }
+
+
+        return $planuList;
     }
 
 
