@@ -14,7 +14,7 @@ class PlanuList
      * PlanuList constructor.
      * @param array $planai
      */
-    public function __construct(array $planai)
+    public function __construct($planai)
     {
         $this->planai = $planai;
     }
@@ -35,6 +35,10 @@ class PlanuList
         $this->planai = $planai;
     }
 
+    public function addPlanas($planas) {
+        $planai[] = $planas;
+    }
+
     function calculate($pasirinktiPokalbiai, $pasirinktosZinutes, $pasirinktasInternetas, $pasirinktaKaina, $planas) {
         $result = sqrt(pow(($planas->getMin() - $pasirinktiPokalbiai), 2)
             + pow(($planas->getSms() - $pasirinktosZinutes),2)
@@ -42,17 +46,5 @@ class PlanuList
             + pow(($planas->getKaina() - $pasirinktaKaina), 2));
         return $result;
     }
-
-    static function sortPlanai($planuList) {
-        if (count($planuList->getPlanai()) == 0) {
-            return $planuList;
-        }
-
-
-        return $planuList;
-    }
-
-
-
 
 }

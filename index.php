@@ -1,15 +1,24 @@
 <?php
 include_once("planas.php");
 include_once("PlanuList.php");
-$p1 = new planas('TELE2', 60, 10000, 1, 5);
-$p2 = new planas('Telia', 190, 10000, 3, 2);
-$p3 = new planas('Bitė', 330, 10000, 5, 3);
-$p4 = new planas('Bitė', 500, 10000, 10, 1.5);
-$p5 = new planas('TELE2', 200, 10000, 1, 2);
-$p6 = new planas('Pildyk', 250, 5000, 2, 1);
-$p7 = new planas('Telia', 300, 10000, 10, 3);
+$connect=mysqli_connect('localhost','root','','planai');
 
-$planuList = new PlanuList([$p1, $p2, $p3, $p4, $p5, $p6, $p7]);
+if(mysqli_connect_errno($connect))
+{
+    echo 'Nepavyko prisijungti: '.mysqli_connect_error();
+} else {
+    $result = mysqli_query($connect,"select * from planai");
+
+    $planai = array();
+
+    while($row=mysqli_fetch_array($result)) {
+        $temp = new planas($row['operatorius'], $row['min'], $row['sms'], $row['gb'], $row['kaina']);
+
+        $planai[] = $temp;
+    }
+
+    $planuList = new PlanuList($planai);
+}
 
 ?>
 
@@ -70,24 +79,8 @@ $planuList = new PlanuList([$p1, $p2, $p3, $p4, $p5, $p6, $p7]);
                 echo "<br/>";
 
                 for($i = 0; $i < count($planuList->getPlanai()); $i++) {
-                    $planuList->getPlanai()[$i]->setRodiklis($planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[$i] ));
+                    $planuList->getPlanai()[$i]->setRodiklis($planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[$i]));
                 }
-
-                foreach ($planuList->getPlanai() as $value){
-                    printf('kof1: ' . $value->getRodiklis() . "\n");
-                }
-
-                echo "<br/>";
-
-                $sortedPlanai = PlanuList::sortPlanai($planuList);
-
-                foreach ($sortedPlanai->getPlanai() as $value){
-                    printf('Kof2: ' . $value->getRodiklis() . "\n");
-                }
-
-                $pirmas = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'],  $planuList->getPlanai()[0] );
-                $antras = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[1] );
-                $trecias = $planuList->calculate((int)$_POST['min'], (int)$_POST['sms'], (int)$_POST['gb'], (int)$_POST['kaina'], $planuList->getPlanai()[2] );
 
                 $maziausias = $planuList->getPlanai()[0];
 
@@ -96,10 +89,6 @@ $planuList = new PlanuList([$p1, $p2, $p3, $p4, $p5, $p6, $p7]);
                         $maziausias = $planuList->getPlanai()[$i];
                     }
                 }
-
-                echo "Pirmo plano: " . $pirmas . "<br>";
-                echo "Antro plano: " . $antras . "<br>";
-                echo "Trečio plano: " . $trecias . "<br>";
 
                 $maziausias->setPasirinktas(true);
             }
